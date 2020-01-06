@@ -23,12 +23,10 @@ public class BackendApiClient {
 
     public List<BookDto> getBooksCollection(Long id) {
         try {
-            BookDto[] booksCollection = restTemplate.getForObject(backendApiConfig.getBackendApiEndpoints()
-                    + "/v1/book/list/" + id, BookDto[].class);
+            BookDto[] booksCollection = restTemplate.getForObject("http://localhost:8080/v1/book/list/" + id, BookDto[].class);
             return Arrays.asList(Optional.ofNullable(booksCollection).orElse(new BookDto[0]));
         } catch (RestClientException e) {
             return new ArrayList<>();
         }
     }
-
 }
