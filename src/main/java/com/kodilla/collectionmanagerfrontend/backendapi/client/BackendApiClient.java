@@ -2,6 +2,7 @@ package com.kodilla.collectionmanagerfrontend.backendapi.client;
 
 import com.kodilla.collectionmanagerfrontend.backendapi.config.BackendApiConfig;
 import com.kodilla.collectionmanagerfrontend.bookscollectionview.BookDto;
+import com.kodilla.collectionmanagerfrontend.bookscollectionview.BookToBackendDtoConverted;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
@@ -23,10 +24,14 @@ public class BackendApiClient {
 
     public List<BookDto> getBooksCollection(Long id) {
         try {
-            BookDto[] booksCollection = restTemplate.getForObject("http://localhost:8080/v1/book/list/" + id, BookDto[].class);
+            BookDto[] booksCollection = restTemplate.getForObject("http://localhost:8080/v1/book/list" + "/" + id, BookDto[].class);
             return Arrays.asList(Optional.ofNullable(booksCollection).orElse(new BookDto[0]));
         } catch (RestClientException e) {
             return new ArrayList<>();
         }
+    }
+
+    public void saveBook(Long id, BookToBackendDtoConverted bookToBackendDtoConverted) {
+        restTemplate.postForObject("http://localhost:8080/v1/book" + "/" + id, bookToBackendDtoConverted, BookToBackendDtoConverted.class);
     }
 }
