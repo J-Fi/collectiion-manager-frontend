@@ -26,7 +26,9 @@ public class MainView extends VerticalLayout {
     private BackendApiService backendApiService;
     private Grid<Book> grid = new Grid<>(Book.class);
     private TextField filter = new TextField();
+    private TextField isbnSearch = new TextField();
     private Button addNewBookButton = new Button("Add a new book");
+    private Button isbnSearchButton = new Button("Wyszukaj książkę");
     //private BookForm form = new BookForm(this);
     private final Long bookCollectionid = 3L;
 
@@ -43,6 +45,12 @@ public class MainView extends VerticalLayout {
         filter.setValueChangeMode(ValueChangeMode.EAGER);
         filter.addValueChangeListener(e -> update(bookCollectionid));
 
+        isbnSearch.setPlaceholder("Tutaj wprowadź numer isbn szukanej książki");
+        isbnSearch.setClearButtonVisible(true);
+
+        HorizontalLayout isbnSearchComponent = new HorizontalLayout(isbnSearch, isbnSearchButton);
+        isbnSearchButton.addClickListener(e -> searchAndFillTheForm());
+
         grid.setColumns("bookId", "title",
                 "authors",
                 "subjects", "publishDate",
@@ -51,8 +59,10 @@ public class MainView extends VerticalLayout {
         addNewBookButton.addClickListener(e -> {
             grid.asSingleSelect().clear(); //"czyścimy" zaznaczenie
             bookForm.setBookToBackendDto(new BookToBackendDto()); //dodajemy nowy obiekt do formularza
+            isbnSearchComponent.setVisible(true);
+            isbnSearchComponent.setSizeFull();
         });
-        HorizontalLayout toolBar = new HorizontalLayout(filter, addNewBookButton);
+        HorizontalLayout toolBar = new HorizontalLayout(filter, addNewBookButton, isbnSearchComponent);
         HorizontalLayout mainLayout = new HorizontalLayout(grid, bookForm);
 
         mainLayout.setSizeFull();
@@ -60,6 +70,7 @@ public class MainView extends VerticalLayout {
 
         add(toolBar, mainLayout);
         bookForm.setBookToBackendDto(null);
+        isbnSearchComponent.setVisible(false);
         setSizeFull();
         refresh(bookCollectionid);
 
@@ -72,5 +83,11 @@ public class MainView extends VerticalLayout {
 
     private void update(Long id) {
         grid.setItems(backendApiService.findByTitle(id, filter.getValue()));
+    }
+
+    public void searchAndFillTheForm() {
+        String isbn = getIsbnSearch().getValue();
+        BookToBackendDto bookToBackendDto = backendApiService.getBookByIsbn(isbn);
+        bookForm.setBookToBackendDto(bookToBackendDto);
     }
 }

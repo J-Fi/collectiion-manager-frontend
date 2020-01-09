@@ -42,4 +42,12 @@ public class BookMapper {
                 bookToBackendDto.getAuthors(), bookToBackendDto.getSubjects(),
                 valueOf(bookToBackendDto.getPublishDate()));
     }
+
+    public BookToBackendDto mappingConverter (BookToBackendDtoConverted BookToBackendDtoConverted) {
+        return new BookToBackendDto(BookToBackendDtoConverted.getIsbn(), BookToBackendDtoConverted.getIsbn13(),
+                BookToBackendDtoConverted.getTitle(), BookToBackendDtoConverted.getPublisher(),
+                BookToBackendDtoConverted.getSynopsys(), BookToBackendDtoConverted.getImage(),
+                BookToBackendDtoConverted.getAuthors(), BookToBackendDtoConverted.getSubjects(),
+                Integer.toString(BookToBackendDtoConverted.getPublishDate()));
+    }
 }

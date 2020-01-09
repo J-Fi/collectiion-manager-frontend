@@ -5,6 +5,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.Route;
@@ -22,6 +23,7 @@ public class BookForm extends FormLayout {
     private MainView mainView;
     private BackendApiService backendApiService;
     private BookToBackendDto bookToBackendDto;
+    //private IsbnBookSearch isbnBookSearch;
 
     private final TextField isbn = new TextField("ISBN");
     private final TextField isbn13 = new TextField("ISBN13");
@@ -42,14 +44,17 @@ public class BookForm extends FormLayout {
     //private BackendApiService backendApiService;
     public BookForm(BackendApiService backendApiService) {
         this.backendApiService = backendApiService;
+        //this.isbnBookSearch = isbnBookSearch;
         //this.mainView = mainView;
         //this.backendApiService = backendApiService;
         //this.mainView = mainView;
 
         this.binder = new Binder<>(BookToBackendDto.class);
         HorizontalLayout buttons = new HorizontalLayout(update, delete);
+        VerticalLayout formLayout = new VerticalLayout(isbn, isbn13, title, publisher, synopsys, image, authors, subjects, publishDate);
         update.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        add(isbn, isbn13, title, publisher, synopsys, image, authors, subjects, publishDate, buttons);
+        //add(isbn13, title, publisher, synopsys, image, authors, subjects, publishDate, buttons);
+        add(formLayout, buttons);
         binder.bindInstanceFields(this);
         /*binder.forField(isbn).bind(BookToBackendDto::getIsbn, BookToBackendDto::setIsbn);
         binder.forField(isbn13).bind(BookToBackendDto::getIsbn13, BookToBackendDto::setIsbn13);
@@ -72,6 +77,11 @@ public class BookForm extends FormLayout {
         this.mainView = mainView;
     }
 
+/*    @Autowired
+    public void setIsbnBookSearch(IsbnBookSearch isbnBookSearch) {
+        this.isbnBookSearch = isbnBookSearch;
+    }*/
+
     public void setBookToBackendDto(BookToBackendDto bookToBackendDto) {
         binder.setBean(bookToBackendDto);
 
@@ -79,7 +89,7 @@ public class BookForm extends FormLayout {
             setVisible(false);
         } else {
             setVisible(true);
-            title.focus();
+            isbn.focus();
         }
     }
 

@@ -40,4 +40,8 @@ public class BackendApiService {
     public void addBook(Long id, BookToBackendDto bookToBackendDto) {
         backendApiClient.saveBook(id, bookMapper.mappingConverter(bookToBackendDto));
     }
+
+    public BookToBackendDto getBookByIsbn(String isbn) {
+        return bookMapper.mappingConverter(backendApiClient.getBookByIsbn(isbn));
+    }
 }

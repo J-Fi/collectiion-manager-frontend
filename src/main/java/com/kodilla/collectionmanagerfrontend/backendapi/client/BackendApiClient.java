@@ -2,6 +2,7 @@ package com.kodilla.collectionmanagerfrontend.backendapi.client;
 
 import com.kodilla.collectionmanagerfrontend.backendapi.config.BackendApiConfig;
 import com.kodilla.collectionmanagerfrontend.bookscollectionview.BookDto;
+import com.kodilla.collectionmanagerfrontend.bookscollectionview.BookToBackendDto;
 import com.kodilla.collectionmanagerfrontend.bookscollectionview.BookToBackendDtoConverted;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,6 +29,15 @@ public class BackendApiClient {
             return Arrays.asList(Optional.ofNullable(booksCollection).orElse(new BookDto[0]));
         } catch (RestClientException e) {
             return new ArrayList<>();
+        }
+    }
+
+    public BookToBackendDtoConverted getBookByIsbn (String isbn) {
+        try {
+            BookToBackendDtoConverted bookToBackendDtoConverted = restTemplate.getForObject("http://localhost:8080/v1/isbndb" + "/" + isbn, BookToBackendDtoConverted.class);
+            return Optional.ofNullable(bookToBackendDtoConverted).orElse(new BookToBackendDtoConverted());
+        } catch (RestClientException e) {
+            return new BookToBackendDtoConverted();
         }
     }
 
