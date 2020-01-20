@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookToBackendDto {
+    private String bookId;
     private String isbn;
     private String isbn13;
     private String title;
@@ -21,4 +22,17 @@ public class BookToBackendDto {
     private String authors;
     private String subjects;
     private String publishDate;
+    private String booksCollectionId;
+
+    public BookToBackendDto(String isbn, String isbn13, String title, String publisher, String synopsys, String image, String authors, String subjects, String publishDate) {
+        this.isbn = isbn;
+        this.isbn13 = isbn13;
+        this.title = title;
+        this.publisher = publisher;
+        this.synopsys = synopsys;
+        this.image = image;
+        this.authors = authors;
+        this.subjects = subjects;
+        this.publishDate = publishDate;
+    }
 }

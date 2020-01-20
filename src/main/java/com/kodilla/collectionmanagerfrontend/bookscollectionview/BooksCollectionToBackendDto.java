@@ -7,11 +7,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class UserCommentOnBook {
-    private Long commentId;
-    private String date;
-    private String content;
-    private String bookId;
+@NoArgsConstructor
+public class BooksCollectionToBackendDto {
+    private String collectionName;
 }

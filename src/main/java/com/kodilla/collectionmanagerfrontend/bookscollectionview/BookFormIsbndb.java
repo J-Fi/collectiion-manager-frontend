@@ -21,13 +21,12 @@ import org.springframework.stereotype.Component;
 @UIScope
 @Getter
 @Setter
-public class BookForm extends FormLayout {
+public class BookFormIsbndb extends FormLayout {
     private MainView mainView;
     private BackendApiService backendApiService;
     private BookToBackendDto bookToBackendDto;
-    private Long booksCollectionID;
+    private Long booksCollectionId;
 
-    private final TextField bookId = new TextField("Nr pozycji");
     private final TextField isbn = new TextField("ISBN");
     private final TextField isbn13 = new TextField("ISBN13");
     private final TextField title = new TextField("Tytuł");
@@ -37,27 +36,24 @@ public class BookForm extends FormLayout {
     private final TextField authors = new TextField("Autorzy");
     private final TextField subjects = new TextField("Kategorie");
     private final TextField publishDate = new TextField("Rok wydania");
-    private final TextField booksCollectionId = new TextField("Nr kolekcji");
 
-    private Button delete = new Button("Delete");
-    private Button update = new Button("Update");
+    private Button add = new Button("Add book");
 
     private Binder<BookToBackendDto> binder;
 
     @Autowired
-    public BookForm(BackendApiService backendApiService, @Lazy MainView mainView) {
+    public BookFormIsbndb(BackendApiService backendApiService, @Lazy MainView mainView) {
         this.backendApiService = backendApiService;
         this.mainView = mainView;
 
         this.binder = new Binder<>(BookToBackendDto.class);
-        HorizontalLayout buttons = new HorizontalLayout(update, delete);
-        VerticalLayout formLayout = new VerticalLayout(bookId, isbn, isbn13, title, publisher, synopsys, image,
-                authors, subjects, publishDate, booksCollectionId);
-        update.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        HorizontalLayout buttons = new HorizontalLayout(add);
+        VerticalLayout formLayout = new VerticalLayout(isbn, isbn13, title, publisher,
+                                                        synopsys, image, authors, subjects, publishDate);
+        add.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         add(formLayout, buttons);
         binder.bindInstanceFields(this);
-        update.addClickListener(e -> updateBook());
-        delete.addClickListener(e -> delete());
+        add.addClickListener(e -> addBook());
     }
 
     public void setBookToBackendDto(BookToBackendDto bookToBackendDto) {
@@ -71,15 +67,10 @@ public class BookForm extends FormLayout {
         }
     }
 
-    public void delete() {
+    public void addBook() {
         bookToBackendDto = binder.getBean();
-        backendApiService.deleteBook(Long.valueOf(bookToBackendDto.getBookId()));
-        mainView.refresh(Long.valueOf(bookToBackendDto.getBooksCollectionId()));
-    }
-
-    public void updateBook() {
-        bookToBackendDto = binder.getBean();
-        backendApiService.updateBook(Long.valueOf(bookToBackendDto.getBooksCollectionId()), Long.valueOf(bookToBackendDto.getBookId()), bookToBackendDto);
-        mainView.refresh(Long.valueOf(bookToBackendDto.getBooksCollectionId()));
+        backendApiService.addBook(booksCollectionId, bookToBackendDto);
+        mainView.refresh(booksCollectionId);
     }
 }
+

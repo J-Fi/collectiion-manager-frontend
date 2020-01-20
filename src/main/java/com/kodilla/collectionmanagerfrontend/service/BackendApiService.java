@@ -2,21 +2,18 @@ package com.kodilla.collectionmanagerfrontend.service;
 
 import com.kodilla.collectionmanagerfrontend.backendapi.client.BackendApiClient;
 import com.kodilla.collectionmanagerfrontend.bookscollectionview.Book;
-import com.kodilla.collectionmanagerfrontend.bookscollectionview.BookDto;
 import com.kodilla.collectionmanagerfrontend.bookscollectionview.BookToBackendDto;
-import com.kodilla.collectionmanagerfrontend.bookscollectionview.BookToBackendDtoConverted;
+import com.kodilla.collectionmanagerfrontend.bookscollectionview.BooksCollectionToBackendDto;
+import com.kodilla.collectionmanagerfrontend.bookscollectionview.UserToBackendDto;
 import com.kodilla.collectionmanagerfrontend.mapper.BookMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Scope;
+import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-@Scope("singleton")
+@UIScope
 public class BackendApiService {
 
     private BackendApiClient backendApiClient;
@@ -38,10 +35,38 @@ public class BackendApiService {
     }
 
     public void addBook(Long id, BookToBackendDto bookToBackendDto) {
-        backendApiClient.saveBook(id, bookMapper.mappingConverter(bookToBackendDto));
+        backendApiClient.saveBook(id, bookMapper.mappingConverterIsbndb(bookToBackendDto));
     }
 
     public BookToBackendDto getBookByIsbn(String isbn) {
-        return bookMapper.mappingConverter(backendApiClient.getBookByIsbn(isbn));
+        return bookMapper.mappingConverterIsbndb(backendApiClient.getBookByIsbn(isbn));
+    }
+
+    public BookToBackendDto getBookById(Long id) {
+        return bookMapper.mappingConverter(backendApiClient.getBookById(id));
+    }
+
+    public void deleteBook(Long id) {
+        backendApiClient.deleteBook(id);
+    }
+
+    public void updateBook(Long booksCollectionId, Long bookId, BookToBackendDto bookToBackendDto) {
+        backendApiClient.updateBook(booksCollectionId, bookId, bookMapper.mappingConverter(bookToBackendDto));
+    }
+
+    public void createUser(UserToBackendDto userToBackendDto) {
+        backendApiClient.createUser(userToBackendDto);
+    }
+
+    public Long getUserIdFromEmail(String userEmail) {
+        return backendApiClient.getUserFromEmail(userEmail).getUserId();
+    }
+
+    public void createBooksCollection(Long userId, BooksCollectionToBackendDto booksCollectionToBackendDto) {
+        backendApiClient.createBooksCollection(userId, booksCollectionToBackendDto);
+    }
+
+    public Long getBooksCollectionId(Long userId) {
+        return backendApiClient.getBooksCollectionIdByUserId(userId).getBooksCollectionId();
     }
 }
