@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @UIScope
 @Component
-@Route
+@Route("login")
 public class Login extends VerticalLayout {
 
     private RegisterForm registerForm;
